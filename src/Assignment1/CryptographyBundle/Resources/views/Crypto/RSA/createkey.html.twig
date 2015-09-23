@@ -1,0 +1,67 @@
+
+<div class="container center-align">
+
+    {{ form_start(form, { 'attr': { 'id': 'rsa_create_key'} }) }}
+
+    <div class="row">
+        <div class="input-field col s12">
+            {{ form_widget(form.Length ) }}
+            <label for="form_Key" style="font-size: 1.1em"> Length </label>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col s12">
+            {{ form_widget(form.submit, { 'label': 'Generate' , 'attr': { 'class':'waves-effect waves-light btn right'} }) }}
+        </div>
+    </div>
+    {{ form_end(form) }}
+    <div class="divider"></div>
+    <textarea id="rsa_public_key" class="left-align materialize-textarea" style="background-color: #7777FF; margin-bottom: 1px;margin-top: 4px;" readonly></textarea>
+    <button id="save_rsa_public_key" class="waves-effect waves-light btn right">Save public key</button>
+    <textarea id="rsa_private_key" class="left-align materialize-textarea" style="background-color: #7777FF; margin-bottom: 1px;margin-top: 25px;" readonly></textarea>
+    <button id="save_rsa_private_key" class="waves-effect waves-light btn right">Save private key</button>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#rsa_private_key').hide();
+        $('#rsa_public_key').hide();
+        $("#save_rsa_public_key").hide();
+        $("#save_rsa_private_key").hide();
+    });
+
+    $("#save_rsa_public_key").click( function() {
+        var text = $("#rsa_public_key").val();
+        var filename = "public_key";
+        var blob = new Blob([text], {type: "text/plain;charset=utf-8"});
+        saveAs(blob, filename+".txt");
+    });
+    $("#save_rsa_private_key").click( function() {
+        var text = $("#rsa_private_key").val();
+        var filename = "private_key";
+        var blob = new Blob([text], {type: "text/plain;charset=utf-8"});
+        saveAs(blob, filename+".txt");
+    });
+
+    $('#rsa_create_key').on('submit', function (e) {
+        var form = $(this);
+        e.preventDefault();
+        if ( form.data('requestRunning') ) {
+            return;
+        }
+        form.data('requestRunning', true);
+        $(this).ajaxSubmit({
+            success: rsaCreateKeyResponse,
+            complete: function () {
+                form.data('requestRunning', false);
+            }
+        });
+    });
+    function rsaCreateKeyResponse(jsonres, status, xhr, $form)  {
+        $("#save_rsa_public_key").show();
+        $("#save_rsa_private_key").show();
+        $('#rsa_private_key').val(jsonres.private_key).trigger('autoresize').show();
+        $('#rsa_public_key').val(jsonres.public_key).trigger('autoresize').show();
+    }
+</script>

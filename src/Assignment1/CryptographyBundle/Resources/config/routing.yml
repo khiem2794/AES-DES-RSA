@@ -1,0 +1,4 @@
+assignment1_cryptography_homepage:
+    resource: "@Assignment1CryptographyBundle/Controller/"
+    prefix: /
+    type: annotation

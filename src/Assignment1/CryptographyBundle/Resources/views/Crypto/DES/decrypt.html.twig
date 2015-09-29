@@ -1,19 +1,24 @@
-
 <div class="container center-align">
 
     {{ form_start(form,  { 'attr': { 'id':'des_decryption' } } ) }}
     <div class="row">
         <div class="input-field col s12">
-            {{ form_widget(form.Key,  { 'attr': { 'class':'materialize-textarea' } } ) }}
+            {{ form_widget(form.DesDeKey,  { 'attr': { 'class':'materialize-textarea' } } ) }}
             <label for="form_Key" style="font-size: 1.1em">Your private key</label>
+        </div>
+        <div class="file-field input-field col s12">
+            <div class="btn waves-effect waves-light left red">
+                <span>Load Key</span>
+                <input id="des_decrypt_load" type="file" accept=".txt">
+            </div>
         </div>
     </div>
 
     <div class="row">
         <div class="file-field input-field col s12">
-            <div class="btn">
-                <span>File</span>
-                {{ form_widget(form.File) }}
+            <div class="btn red">
+                <span>Upload File</span>
+                {{ form_widget(form.DesDeFile) }}
             </div>
             <div class="file-path-wrapper">
                 <input class="file-path validate" type="text">
@@ -23,7 +28,7 @@
 
     <div class="row">
         <div class="col s12">
-            {{ form_widget(form.submit, { 'attr': { 'class':'waves-effect waves-light btn right'} }) }}
+            {{ form_widget(form.submit, { 'label': 'Decrypt', 'attr': { 'class':'waves-effect waves-light btn right red'} }) }}
         </div>
     </div>
     {{ form_end(form) }}
@@ -31,21 +36,37 @@
 </div>
 
 <div id="des_decryption_modal" class="modal">
-    <div class="modal-content ">
-        <h4>DES  DECRYPTION  COMPLETE</h4>
+    <div class="modal-content center-align">
+        <h4>DES DECRYPTION COMPLETE</h4>
+
         <p>MD5 HASH: <span id="des_decryption_hash"></span></p>
-        <a id="des_decryption_path" class="waves-effect waves-green btn light-blue">Download</a>
+        <a id="des_decryption_path" class="waves-effect waves-green btn red">Download</a>
     </div>
     <div class="modal-footer">
-        <a class=" modal-action modal-close waves-effect waves-green btn-flat light-blue">Close</a>
+        <a class=" modal-action modal-close waves-effect waves-green btn-flat red">Close</a>
     </div>
 </div>
 <script>
+    $('#des_decrypt_load').change(function () {
+        if (this.files[0].type == "text/plain") {
+            // generate a new FileReader object
+            var reader = new FileReader();
+            // inject an image with the src url
+            reader.onload = function (event) {
+                var data = event.target.result;
+                $('#form_DesDeKey').val(data).trigger('autoresize');
+                $("#des_decryption label[for='form_Key']").addClass('active');
+            };
+            reader.readAsText(this.files[0]);
+        } else {
+            Materialize.toast('Only accept plain text', 1000); // Wrong type
+        }
+    });
     $('#des_decryption').on('submit', function (e) {
         e.preventDefault();
         $(this).ajaxSubmit({success: desDecryptResponse});
     });
-    function desDecryptResponse(jsonres, status, xhr, $form)  {
+    function desDecryptResponse(jsonres, status, xhr, $form) {
         $("#des_decryption_hash").html(jsonres.hash);
         $("#des_decryption_path").attr("href", jsonres.path);
         $('#des_decryption_modal').openModal();

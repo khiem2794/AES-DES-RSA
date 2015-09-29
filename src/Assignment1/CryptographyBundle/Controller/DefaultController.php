@@ -16,7 +16,7 @@ class DefaultController extends Controller
      * @Route("/",name="crypto")
      */
     public function indexAction() {
-        return $this->render("@Assignment1Cryptography/index.html.twig");
+        return $this->render("@Assignment1Cryptography/Crypto/index.html.twig");
     }
 
 
@@ -27,8 +27,8 @@ class DefaultController extends Controller
         $form = $this->createFormBuilder()
             ->setMethod('POST')
             ->setAction($this->generateUrl('DES_ENCRYPT'))
-            ->add('Key', 'textarea')
-            ->add('File', 'file', array(
+            ->add('DesEnKey', 'textarea')
+            ->add('DesEnFile', 'file', array(
                 'mapped' => false
             ))
             ->add('submit', 'submit')
@@ -38,16 +38,16 @@ class DefaultController extends Controller
         $form->handleRequest($request);
 
         if($request->isXmlHttpRequest()){
-            $file = $form['File']->getData();
-            $key = $form['Key']->getData();
+            $file = $form['DesEnFile']->getData();
+            $key = $form['DesEnKey']->getData();
             $des = new DES($key, $file);
             $encrypted_file = $des->encrypt();
             return new JsonResponse(array('hash' => $encrypted_file->getHash(), 'path' => $encrypted_file->getPath()));
         }
 
         if ($request->getMethod() == 'POST' && $form->isValid()) {
-            $file = $form['File']->getData();
-            $key = $form['Key']->getData();
+            $file = $form['DesEnFile']->getData();
+            $key = $form['DesEnKey']->getData();
             $des = new DES($key, $file);
             $encrypted_file = $des->encrypt();
 
@@ -71,8 +71,8 @@ class DefaultController extends Controller
         $form = $this->createFormBuilder()
             ->setMethod('POST')
             ->setAction($this->generateUrl('DES_DECRYPT'))
-            ->add('Key', 'textarea')
-            ->add('File', 'file', array(
+            ->add('DesDeKey', 'textarea')
+            ->add('DesDeFile', 'file', array(
                 'mapped' => false
             ))
             ->add('submit', 'submit')
@@ -82,16 +82,16 @@ class DefaultController extends Controller
         $form->handleRequest($request);
 
         if($request->isXmlHttpRequest()){
-            $file = $form['File']->getData();
-            $key = $form['Key']->getData();
+            $file = $form['DesDeFile']->getData();
+            $key = $form['DesDeKey']->getData();
             $des = new DES($key, $file);
             $decrypted_file = $des->decrypt();
             return new JsonResponse(array('hash' => $decrypted_file->getHash(), 'path' => $decrypted_file->getPath()));
         }
 
         if ($request->getMethod() == 'POST' && $form->isValid()) {
-            $file = $form['File']->getData();
-            $key = $form['Key']->getData();
+            $file = $form['DesDeFile']->getData();
+            $key = $form['DesDeKey']->getData();
             //$file->move('/web/bundles/assignment1cryptography/upload/Files', $file->getClientOriginalName());
             $des = new DES($key, $file);
             $decrypted_file = $des->decrypt();
@@ -241,27 +241,22 @@ class DefaultController extends Controller
         $form = $this->createFormBuilder()
             ->setMethod('POST')
             ->setAction($this->generateUrl('AES_ENCRYPT'))
-            ->add('Key', 'textarea', array(
-                'attr' => array(
-                    'cols' => 75,
-                    'rows' => 15
-                )
-            ))
-            ->add('File', 'file')
+            ->add('AesEnKey', 'textarea')
+            ->add('AesEnFile', 'file')
             ->add('submit', 'submit')
             ->getForm();
         $request = $this->get('request');
         $form->handleRequest($request);
         if($request->isXmlHttpRequest()){
-            $key = $form['Key']->getData();
-            $file = $form['File']->getData();
+            $key = $form['AesEnKey']->getData();
+            $file = $form['AesEnFile']->getData();
             $aes = new AES($key, $file);
             $encrypted_file = $aes->encrypt();
             return new JsonResponse(array('hash' => $encrypted_file->getHash(), 'path' => $encrypted_file->getPath()));
         }
         if ( $request->getMethod() == 'POST') {
-            $key = $form['Key']->getData();
-            $file = $form['File']->getData();
+            $key = $form['AesEnKey']->getData();
+            $file = $form['AesEnFile']->getData();
 
             $aes = new AES($key, $file);
             $encrypted_file = $aes->encrypt();
@@ -285,27 +280,22 @@ class DefaultController extends Controller
         $form = $this->createFormBuilder()
             ->setMethod('POST')
             ->setAction($this->generateUrl('AES_DECRYPT'))
-            ->add('Key', 'textarea', array(
-                'attr' => array(
-                    'cols' => 75,
-                    'rows' => 15
-                )
-            ))
-            ->add('File', 'file')
+            ->add('AesDeKey', 'textarea')
+            ->add('AesDeFile', 'file')
             ->add('submit', 'submit')
             ->getForm();
         $request = $this->get('request');
         $form->handleRequest($request);
         if($request->isXmlHttpRequest()){
-            $key = $form['Key']->getData();
-            $file = $form['File']->getData();
+            $key = $form['AesDeKey']->getData();
+            $file = $form['AesDeFile']->getData();
             $aes = new AES($key, $file);
             $decrypted_file = $aes->decrypt();
             return new JsonResponse(array('hash' => $decrypted_file->getHash(), 'path' => $decrypted_file->getPath()));
         }
         if ( $request->getMethod() == 'POST') {
-            $key = $form['Key']->getData();
-            $file = $form['File']->getData();
+            $key = $form['AesDeKey']->getData();
+            $file = $form['AesDeFile']->getData();
             $aes = new AES($key, $file);
             $decrypted_file = $aes->decrypt();
 
@@ -321,6 +311,8 @@ class DefaultController extends Controller
         ));
     }
 
-
-
 }
+
+
+
+

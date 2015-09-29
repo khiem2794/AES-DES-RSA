@@ -1,24 +1,24 @@
-
 <div class="container center-align">
-
-    {% if encrypted_file is defined %}
-        <p>Hash: {{ file_hash }}</p>
-        <a href="{{ encrypted_file }}">File encrypted</a>
-    {% endif %}
 
     {{ form_start(form, { 'attr': { 'id': 'aes_decryption' } } ) }}
     <div class="row">
         <div class="input-field col s12">
-            {{ form_widget(form.Key,  { 'attr': { 'class':'materialize-textarea' } } ) }}
+            {{ form_widget(form.AesDeKey,  { 'attr': { 'class':'materialize-textarea' } } ) }}
             <label for="form_Key" style="font-size: 1.1em">Your private key</label>
+        </div>
+        <div class="file-field input-field col s12">
+            <div class="btn waves-effect waves-light left blue">
+                <span>Load Key</span>
+                <input id="aes_decrypt_load" type="file" accept=".txt">
+            </div>
         </div>
     </div>
 
     <div class="row">
         <div class="file-field input-field col s12">
-            <div class="btn">
-                <span>File</span>
-                {{ form_widget(form.File) }}
+            <div class="btn blue">
+                <span>Upload File</span>
+                {{ form_widget(form.AesDeFile) }}
             </div>
             <div class="file-path-wrapper">
                 <input class="file-path validate" type="text">
@@ -28,7 +28,7 @@
 
     <div class="row">
         <div class="col s12">
-            {{ form_widget(form.submit, { 'attr': { 'class':'waves-effect waves-light btn right'} }) }}
+            {{ form_widget(form.submit, {'label': 'Decrypt', 'attr': { 'class':'blue waves-effect waves-light btn right'} }) }}
         </div>
     </div>
     {{ form_end(form) }}
@@ -36,21 +36,36 @@
 </div>
 
 <div id="aes_decryption_modal" class="modal">
-    <div class="modal-content ">
-        <h4>DES  ENCRYPTION  COMPLETE</h4>
+    <div class="modal-content center-align">
+        <h4>AES DECRYPTION COMPLETE</h4>
         <p>MD5 HASH: <span id="aes_decryption_hash"></span></p>
-        <a id="aes_decryption_path" class="waves-effect waves-green btn light-blue">Download</a>
+        <a id="aes_decryption_path" class="waves-effect waves-green btn blue">Download</a>
     </div>
     <div class="modal-footer">
-        <a class=" modal-action modal-close waves-effect waves-green btn-flat light-blue">Close</a>
+        <a class=" modal-action modal-close waves-effect waves-green btn blue">Close</a>
     </div>
 </div>
 <script>
+    $('#aes_decrypt_load').change(function () {
+        if (this.files[0].type == "text/plain") {
+            // generate a new FileReader object
+            var reader = new FileReader();
+            // inject an image with the src url
+            reader.onload = function (event) {
+                var data = event.target.result;
+                $('#form_AesDeKey').val(data).trigger('autoresize');
+                $("#aes_decryption label[for='form_Key']").addClass('active');
+            };
+            reader.readAsText(this.files[0]);
+        } else {
+            Materialize.toast('Only accept plain text', 1000); // Wrong type
+        }
+    });
     $('#aes_decryption').on('submit', function (e) {
         e.preventDefault();
         $(this).ajaxSubmit({success: aesDecryptResponse});
     });
-    function aesDecryptResponse(jsonres, status, xhr, $form)  {
+    function aesDecryptResponse(jsonres, status, xhr, $form) {
         $("#aes_decryption_hash").html(jsonres.hash);
         $("#aes_decryption_path").attr("href", jsonres.path);
         $('#aes_decryption_modal').openModal();

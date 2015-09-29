@@ -108,17 +108,19 @@ class DES
         $this->save_name = "DecryptedFile_".$hash;
         file_put_contents($this->getFileRootDir().'/'.$this->save_name,$plaintext);
         unlink($this->file->getPathname());
-
         return new CryptoFile($hash, $this->getWebPath().'/'.$this->save_name);
     }
+
     // return web path for downloading file
     public function getWebPath(){
         return '/bundles/assignment1cryptography/upload/DES'.'/'.$this->getSaveName();
     }
+
     // return relative file location
     public function getFileDir(){
         return '/web/bundles/assignment1cryptography/upload/DES';
     }
+
     // return absolute location
     public function getFileRootDir(){
         return '/root/PhpstormProjects/AssignmnetCrypto'. $this->getFileDir();

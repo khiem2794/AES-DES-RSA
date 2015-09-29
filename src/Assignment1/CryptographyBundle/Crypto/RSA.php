@@ -129,14 +129,17 @@ class RSA
     public function getWebPath(){
         return '/bundles/assignment1cryptography/upload/DES'.'/'.$this->getSaveName();
     }
+
     // return relative file location
     public function getFileDir(){
         return '/web/bundles/assignment1cryptography/upload/DES';
     }
+
     // return absolute location
     public function getFileRootDir(){
         return '/root/PhpstormProjects/AssignmnetCrypto'. $this->getFileDir();
     }
+
     public function getFileUploadDir() {
         return '/web/bundles/assignment1cryptography/upload/Files';
     }

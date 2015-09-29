@@ -40,7 +40,13 @@
         <h4>RSA ENCRYPTION COMPLETE</h4>
 
         <p>MD5 HASH: <span id="rsa_encryption_hash"></span></p>
+        <a id="rsa_share" class="waves-effect waves-green btn purple">Share</a>
         <a id="rsa_encryption_path" class="waves-effect waves-green btn purple">Download</a>
+        <p>
+        <div class="input-field col s12 center-align">
+            <input  id="rsa_en_path_input" type="text" value="This is a link" class="grey" readonly />
+        </div>
+        </p>
     </div>
     <div class="modal-footer">
         <a class=" modal-action modal-close waves-effect waves-green btn purple">Close</a>
@@ -65,12 +71,17 @@
     });
     $('#rsa_encryption').on('submit', function (e) {
         e.preventDefault();
+        $("#rsa_en_path_input").hide();
         $(this).ajaxSubmit({success: rsaEncryptResponse});
     });
     function rsaEncryptResponse(jsonres, status, xhr, $form) {
         $("#rsa_encryption_hash").html(jsonres.hash);
         $("#rsa_encryption_path").attr("href", jsonres.path);
         $('#rsa_encryption_modal').openModal();
+        $("#rsa_en_path_input").attr("value", window.location.host + jsonres.path);
     }
+    $("#rsa_share").on("click", function() {
+        $("#rsa_en_path_input").show().select();
+    });
 </script>
 

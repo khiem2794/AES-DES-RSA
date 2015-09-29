@@ -127,12 +127,12 @@ class RSA
 
     // return web path for downloading file
     public function getWebPath(){
-        return '/bundles/assignment1cryptography/upload/DES'.'/'.$this->getSaveName();
+        return '/bundles/assignment1cryptography/upload/RSA'.'/'.$this->getSaveName();
     }
 
     // return relative file location
     public function getFileDir(){
-        return '/web/bundles/assignment1cryptography/upload/DES';
+        return '/web/bundles/assignment1cryptography/upload/RSA';
     }
 
     // return absolute location

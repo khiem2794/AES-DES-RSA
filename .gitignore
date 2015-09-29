@@ -10,7 +10,3 @@
 /vendor/
 /bin/
 /composer.phar
-/src/Assignment1/CryptographyBundle/Resources/public/upload/AES
-/src/Assignment1/CryptographyBundle/Resources/public/upload/DES
-/src/Assignment1/CryptographyBundle/Resources/public/upload/RSA
-/src/Assignment1/CryptographyBundle/Resources/public/upload/Files

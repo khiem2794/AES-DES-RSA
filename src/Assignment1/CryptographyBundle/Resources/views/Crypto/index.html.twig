@@ -28,17 +28,19 @@
         .algorithm li b {
             color: white;
         }
-        #loading{
+
+        #loading {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             z-index: 10;
-            background-color: rgba(0,0,0,0.5); /*dim the background*/
+            background-color: rgba(0, 0, 0, 0.5); /*dim the background*/
             display: table-cell;
             vertical-align: middle;
         }
+
         #loadingImg {
             position: relative;
         }
@@ -133,16 +135,31 @@
 <script>
     $(document).ready(function () {
         $('#loading').hide();
-        $(document).ajaxStart( function(){
-            $("#loadingImg")
-                    .css("margin-left",$('#loading').width()/2-64+"px")
-                    .css("margin-top",$('#loading').height()/2-64+"px");
+        $("#loadingImg").hide();
+        $(document).ajaxStart(function () {
             $('#loading').show();
+            $("#loadingImg")
+                    .css("margin-left", $('#loading').width() / 2 - 64 + "px")
+                    .css("margin-top", $('#loading').height() / 2 - 80 + "px")
+                    .show();
         }).ajaxComplete(function () {
+
+            $("#loadingImg").hide();
             $('#loading').hide();
         });
 
+        $('#des_encryption_modal').leanModal({
+                    dismissible: false, // Modal can be dismissed by clicking outside of the modal
+                    opacity: .5, // Opacity of modal background
+                    in_duration: 300, // Transition in duration
+                    out_duration: 200, // Transition out duration
+                    ready: function() { alert('Ready'); }, // Callback for Modal open
+                    complete: function() { alert('Closed'); } // Callback for Modal close
+                }
+        );
+
     });
+
 </script>
 </body>
 </html>
